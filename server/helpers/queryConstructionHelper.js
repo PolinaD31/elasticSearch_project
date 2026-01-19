@@ -1,5 +1,5 @@
 const queryConstructionHelper = (searchParams) => {
-  const { searchTerm, category, gender, color, sortOrder } = searchParams
+  const { searchTerm, category, gender, color, sortOrder, brand } = searchParams
 
   console.log('Generating search query with params:', searchParams)
 
@@ -83,6 +83,13 @@ const queryConstructionHelper = (searchParams) => {
   if (color !== '') {
     query.body.query.function_score.query.bool.filter.push({
       term: { color: color },
+    })
+  }
+
+  // Add brand filter if provided
+  if (brand !== '') {
+    query.body.query.function_score.query.bool.filter.push({
+      term: { brand: brand },
     })
   }
 

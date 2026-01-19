@@ -1,8 +1,11 @@
-function App() {
+import Navbar from './shared/Navbar'
+import SearchPage from './components/SearchPage/SearchPage'
 
+function App() {
   return (
     <>
-      <div className="flex justify-center font-bold">Hello world</div>
+      <Navbar />
+      <SearchPage />
     </>
   )
 }

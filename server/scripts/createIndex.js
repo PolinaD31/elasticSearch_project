@@ -19,7 +19,9 @@ const createIndex = async () => {
     // If index doesn't exist - create
     await client.indices.create({
       index: mappings.index,
-      body: mappings.body,
+      body: {
+        mappings: mappings.mappings,
+      },
     })
     console.log('Index created successfully')
   } catch (error) {

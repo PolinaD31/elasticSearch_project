@@ -21,7 +21,7 @@ const queryConstructionHelper = (searchParams) => {
               field_value_factor: {
                 field: 'rating',
                 // Relatively small boost, does not dominate over text relevance
-                factor: 1.2,
+                factor: 1.4,
                 modifier: 'sqrt',
                 // Missing ranking nevatively affects the relevancy
                 missing: 2,
@@ -37,14 +37,28 @@ const queryConstructionHelper = (searchParams) => {
 
   // Add searching by text if it is provided
   if (searchTerm !== '') {
-    query.body.query.function_score.query.bool.must.push({
-      multi_match: {
-        query: searchTerm,
-        fields: ['title^2', 'description'],
-        type: 'phrase',
-        slop: 3
-      },
+     query.body.query.function_score.query.bool.must.push({
+        multi_match: {
+          query: searchTerm,
+          fields: ["title^2", "description"],
+          type: "best_fields",
+          // If we do the sorting we want closer matches
+          operator: sortOrder === "" ? "or" : "and"
+        }
     })
+
+    // Higher relevance scores for products that match this querys
+    query.body.query.function_score.query.bool.should = [ 
+        {
+        multi_match: {
+          query: searchTerm,
+          fields: ["title^3", "description"],
+          // Combines scores across all field
+          type: "cross_fields",
+          operator: "and"
+        }
+      }
+  ]
   } else {
     query.body.query.function_score.query.bool.must.push({
       match_all: {},
@@ -65,6 +79,7 @@ const queryConstructionHelper = (searchParams) => {
     })
   }
 
+  // Add color filter if provided
   if (color !== '') {
     query.body.query.function_score.query.bool.filter.push({
       term: { color: color },

@@ -15,7 +15,8 @@ searchController.get('/', async (req, res) => {
 
     res.json(items)
   } catch (error) {
-    console.log(error)
+    console.error(error.message)
+    res.status(500).send("Server error")
   }
 })
 

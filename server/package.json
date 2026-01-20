@@ -7,6 +7,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "nodemon index.js",
+    "start": "node index.js",
     "format": "prettier --write \"**/*.{js,jsx,json,md}\"",
     "index": "node scripts/createIndex.js",
     "ingest": "node scripts/ingestData.js"

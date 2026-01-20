@@ -41,9 +41,9 @@ const queryConstructionHelper = (searchParams) => {
         multi_match: {
           query: searchTerm,
           fields: ["title^2", "description"],
-          type: "best_fields",
+          type: "cross_fields",
           // If we do the sorting we want closer matches
-          operator: sortOrder === "" ? "or" : "and"
+          operator: sortOrder === "" ? "or" : "and",
         }
     })
 

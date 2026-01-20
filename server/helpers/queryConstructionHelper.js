@@ -37,28 +37,28 @@ const queryConstructionHelper = (searchParams) => {
 
   // Add searching by text if it is provided
   if (searchTerm !== '') {
-     query.body.query.function_score.query.bool.must.push({
-        multi_match: {
-          query: searchTerm,
-          fields: ["title^2", "description"],
-          type: "cross_fields",
-          // If we do the sorting we want closer matches
-          operator: sortOrder === "" ? "or" : "and",
-        }
+    query.body.query.function_score.query.bool.must.push({
+      multi_match: {
+        query: searchTerm,
+        fields: ['title^2', 'description'],
+        type: 'cross_fields',
+        // If we do the sorting we want closer matches
+        operator: sortOrder === '' ? 'or' : 'and',
+      },
     })
 
     // Higher relevance scores for products that match this querys
-    query.body.query.function_score.query.bool.should = [ 
-        {
+    query.body.query.function_score.query.bool.should = [
+      {
         multi_match: {
           query: searchTerm,
-          fields: ["title^3", "description"],
+          fields: ['title^3', 'description'],
           // Combines scores across all field
-          type: "cross_fields",
-          operator: "and"
-        }
-      }
-  ]
+          type: 'cross_fields',
+          operator: 'and',
+        },
+      },
+    ]
   } else {
     query.body.query.function_score.query.bool.must.push({
       match_all: {},
@@ -97,8 +97,8 @@ const queryConstructionHelper = (searchParams) => {
   if (sortOrder !== '') {
     query.body.sort.push({
       price: {
-        order: sortOrder
-      }
+        order: sortOrder,
+      },
     })
   }
 

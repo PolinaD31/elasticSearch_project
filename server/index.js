@@ -2,6 +2,7 @@ import express from 'express'
 import { checkClient } from './elastic/elastic.js'
 import { connectToDatabase } from './database/db.js'
 import searchController from './controllers/search.js'
+import 'dotenv/config'
 
 const app = express()
 
@@ -15,8 +16,13 @@ app.use('/api/search', searchController)
 app.use(express.static('dist'))
 
 const PORT = process.env.PORT || 3001
-app.listen(PORT, async () => {
+
+const startServer = async () => {
   await checkClient()
   await connectToDatabase()
-  console.log(`App running on port ${PORT}`)
-})
+  app.listen(PORT, () => {
+    console.log(`App running on port ${PORT}`)
+  })
+}
+
+startServer()

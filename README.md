@@ -1,5 +1,5 @@
 ## Elastic Search Project
-A full-stack application for searching and filtering products using Elasticsearch.
+A small full-stack clothing marketplace for searching and filtering products using Elasticsearch.
 
 ## Prerequisites
 
@@ -7,8 +7,9 @@ A full-stack application for searching and filtering products using Elasticsearc
 - PostgreSQL
 - Elasticsearch cloud account and API key
 - npm or yarn
+- Docker (optional)
 
-#### Backend 
+### Backend 
 1. To run backend first create a `.env` file and add your Elastic Search Api key & url and your Postgre connection string
    ```javascript
    API_KEY = your_api_key
@@ -21,16 +22,23 @@ A full-stack application for searching and filtering products using Elasticsearc
 To create a product index run `npm run index`
 To inject data from PostgreSQL into Elastic Search run `npm run inject`
 
-#### Frontend
+### Frontend
 1. Run `npm install`
 2. run `npm run dev`
 
-#### Why ElasticSearch make sense for this application
+### Running the project usng Docker
+1. In the root of the project run ` docker build -t elasticSearch-project .`
+2. Run `docker run -p 8080:8080 elasticSearch-project`. This will start the project on port 8080
+
+## Design decisions
+This section explains how and why ElasticSearch is used in this project.
+
+### Why ElasticSearch make sense for this application
 
 Search is a core feature of a marketplace. In order to keep your users and sellers happy, you need to make sure the results for the search are relevant.
 ElasticSearch is great for full-text search and relevance ranking.
 
-#### ElasticSearch for Search, PostgreSQL as the Database
+### ElasticSearch for Search, PostgreSQL as the Database
 PostgreSQL remains the authoritative data source, while ElasticSearch handles search operations.
 
 **Why?**
@@ -42,3 +50,28 @@ Although this application does not provide full marketplace functionality, this 
 Currently, you must manually run a script to ingest data from PostgreSQL into ElasticSearch, which means data may not always be up to date.
 In a real-world setup, you would implement a data pipeline, however, some latency would still exist, meaning that ElasticSearch data will always be slightly behind PostgreSQL.
 In this case this means prioritizing data integrity.
+
+### ElasticSearch design
+
+#### What is included in the search results?
+The search results include products that have any of the search terms in title or description. 
+
+Relevance Strategy
+- Products that match the search phrase exactly appear on top
+- Products that partially match the search terms still appear, but lower
+- Products whose category is related to the search appear higher
+  
+**Why?**
+As this is a marketplace clone, even if the marketplace doesn't have the exact product the user is searching for, similar items can still be valuable to the user.
+
+#### Titles Matter More Than Descriptions
+Product titles are weighted more heavily than descriptions when ranking results.
+
+**Why?**  Titles are typically more concise and intentional.
+
+#### Product Quality Influences Ranking
+Products with higher ratings are slightly boosted in the results.
+
+**Why?**  Users generally prefer higher-quality, higher-rated products.
+
+

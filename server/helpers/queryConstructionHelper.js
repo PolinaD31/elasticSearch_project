@@ -47,17 +47,27 @@ const queryConstructionHelper = (searchParams) => {
       },
     })
 
-    // Higher relevance scores for products that match this querys
+    // Higher relevance scores for products that match the should clause
     query.body.query.function_score.query.bool.should = [
       {
         multi_match: {
           query: searchTerm,
-          fields: ['title^3', 'description'],
+          fields: ['title^2', 'description'],
           // Combines scores across all field
           type: 'cross_fields',
           operator: 'and',
+          boost: 5
         },
       },
+      // Boost products whose category matches the search term
+      {
+    match: {
+      "category.search": {
+        query: searchTerm,
+        boost: 3
+      }
+    }
+  },
     ]
   } else {
     query.body.query.function_score.query.bool.must.push({
@@ -70,7 +80,7 @@ const queryConstructionHelper = (searchParams) => {
     query.body.query.function_score.query.bool.filter.push({
       term: { category: category },
     })
-  }
+  } 
 
   // Add gender filter if provided
   if (gender !== '') {

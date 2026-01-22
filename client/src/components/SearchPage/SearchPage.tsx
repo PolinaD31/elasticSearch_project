@@ -3,7 +3,12 @@ import Dropdown from '../../shared/Dropdown'
 import productsService from '../../services/products'
 import type { SearchFilters } from './types'
 import type { Product } from '../../shared/types'
-import { productCategoryOptions, productColorOptions, productBrandOptions, GenderOptions } from './types'
+import {
+  productCategoryOptions,
+  productColorOptions,
+  productBrandOptions,
+  GenderOptions,
+} from './types'
 import Products from '../Products'
 import SearchBar from '../SearchBar'
 
@@ -13,25 +18,29 @@ const DEFAULT_FILTERS: SearchFilters = {
   gender: '',
   color: '',
   sortOrder: '',
-  brand: ''
+  brand: '',
 }
 
 const SearchPage = () => {
   const [filters, setFilters] = useState<SearchFilters>(DEFAULT_FILTERS)
   const [products, setProducts] = useState<Product[]>([])
+  const [isLoading, setIsLoading] = useState(false)
 
   useEffect(() => {
     const fetchInitialProducts = async () => {
+      setIsLoading(true)
       try {
         const data = await productsService.search(DEFAULT_FILTERS)
         setProducts(data)
       } catch (error) {
-        console.error('Error fetching products:', error)
-      } 
+          console.error('Error fetching products:', error) 
+      } finally {
+        setIsLoading(false)
+      }
     }
 
     fetchInitialProducts()
-  }, []) 
+  }, [])
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -45,11 +54,20 @@ const SearchPage = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+
+    if (isLoading) {
+      return
+    }
+
+    setIsLoading(true)
+
     try {
       const data = await productsService.search(filters)
       setProducts(data)
     } catch (error) {
       console.error('Error searching products:', error)
+    } finally {
+      setIsLoading(false)
     }
   }
 
@@ -59,14 +77,17 @@ const SearchPage = () => {
     <div className="bg-white shadow-md rounded-lg p-6 mb-6">
       <form onSubmit={handleSubmit} className="space-y-6">
         <div className="flex flex-col md:flex-row gap-4">
-          <SearchBar searchTerm={filters.searchTerm} handleChange={handleChange} />
+          <SearchBar
+            searchTerm={filters.searchTerm}
+            handleChange={handleChange}
+          />
           <div className="w-full md:w-1/8">
             <Dropdown
               value={filters.category}
               name="category"
               onChange={handleChange}
               options={productCategoryOptions}
-              text='Category'
+              text="Category"
             />
           </div>
           <div className="w-full md:w-1/10">
@@ -75,7 +96,7 @@ const SearchPage = () => {
               name="gender"
               onChange={handleChange}
               options={GenderOptions}
-              text='Gender'
+              text="Gender"
             />
           </div>
           <div className="w-full md:w-1/10">
@@ -84,7 +105,7 @@ const SearchPage = () => {
               name="color"
               onChange={handleChange}
               options={productColorOptions}
-              text='Color'
+              text="Color"
             />
           </div>
           <div className="w-full md:w-1/10">
@@ -93,7 +114,7 @@ const SearchPage = () => {
               name="brand"
               onChange={handleChange}
               options={productBrandOptions}
-              text='Brand'
+              text="Brand"
             />
           </div>
           <div className="w-full md:w-1/10">
@@ -102,11 +123,12 @@ const SearchPage = () => {
               name="sortOrder"
               onChange={handleChange}
               options={['asc', 'desc']}
-              text='Sort by price'
+              text="Sort by price"
             />
           </div>
           <div className="md:w-auto">
             <button
+              disabled={isLoading}
               type="submit"
               className="btn btn-primary w-full md:w-auto px-8 py-3"
             >
@@ -115,7 +137,11 @@ const SearchPage = () => {
           </div>
         </div>
       </form>
-      <Products products={products} />
+      {isLoading ? (
+        <div className=" flex justify-center m-5 font-bold">Loading...</div>
+      ) : (
+        <Products products={products} />
+      )}
     </div>
   )
 }

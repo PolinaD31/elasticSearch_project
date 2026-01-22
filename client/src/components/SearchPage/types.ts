@@ -1,17 +1,17 @@
 export const SortOrder = {
   ASC: 'asc',
-  DESC: 'desc'
+  DESC: 'desc',
 } as const
 
-export type SortOrderType = typeof SortOrder[keyof typeof SortOrder]
+export type SortOrderType = (typeof SortOrder)[keyof typeof SortOrder]
 
 export const Gender = {
-    WOMEN: 'Women',
-    MEN: 'Men',
-    UNISEX: 'Unisex'
+  WOMEN: 'Women',
+  MEN: 'Men',
+  UNISEX: 'Unisex',
 } as const
 
-export type GenderType = typeof Gender[keyof typeof Gender]
+export type GenderType = (typeof Gender)[keyof typeof Gender]
 
 export interface SearchFilters {
   searchTerm: string
@@ -35,7 +35,8 @@ export const ProductCategories = {
   LINGERIE_SLEEPWEAR: 'Lingerie & Sleepwear',
 } as const
 
-export type ProductCategoriesType = typeof ProductCategories[keyof typeof ProductCategories]
+export type ProductCategoriesType =
+  (typeof ProductCategories)[keyof typeof ProductCategories]
 
 export const ProductColors = {
   PURPLE: 'Purple',
@@ -51,7 +52,8 @@ export const ProductColors = {
   RED: 'Red',
 } as const
 
-export type ProductColorsType = typeof ProductColors[keyof typeof ProductColors]
+export type ProductColorsType =
+  (typeof ProductColors)[keyof typeof ProductColors]
 
 export const ProductBrands = {
   URBAN_CHIC: 'UrbanChic',
@@ -70,7 +72,8 @@ export const ProductBrands = {
   CHANEL: 'Chanel',
 } as const
 
-export type ProductBrandsType = typeof ProductBrands[keyof typeof ProductBrands]
+export type ProductBrandsType =
+  (typeof ProductBrands)[keyof typeof ProductBrands]
 
 export const productCategoryOptions = Object.values(ProductCategories)
 export const productColorOptions = Object.values(ProductColors)

@@ -2,7 +2,7 @@ type Props = {
   value: string | number
   name: string
   onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void
-  options: string[],
+  options: string[]
   text: string
 }
 
@@ -15,7 +15,7 @@ const Dropdown = ({ value, name, options, text, onChange }: Props) => {
       className="select select-bordered w-full"
     >
       <option value="">{text}</option>
-      {options.map(option => (
+      {options.map((option) => (
         <option key={option}>{option}</option>
       ))}
     </select>

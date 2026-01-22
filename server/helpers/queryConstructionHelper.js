@@ -21,7 +21,7 @@ const queryConstructionHelper = (searchParams) => {
               field_value_factor: {
                 field: 'rating',
                 // Relatively small boost, does not dominate over text relevance
-                factor: 1.4,
+                factor: 1.5,
                 modifier: 'sqrt',
                 // Missing ranking nevatively affects the relevancy
                 missing: 2,
@@ -41,9 +41,11 @@ const queryConstructionHelper = (searchParams) => {
       multi_match: {
         query: searchTerm,
         fields: ['title^2', 'description'],
-        type: 'cross_fields',
+        type: 'best_fields',
         // If we do the sorting we want closer matches
         operator: sortOrder === '' ? 'or' : 'and',
+        // Allow some typos
+        fuzziness: 'AUTO',
       },
     })
 
@@ -56,18 +58,18 @@ const queryConstructionHelper = (searchParams) => {
           // Combines scores across all field
           type: 'cross_fields',
           operator: 'and',
-          boost: 5
+          boost: 5,
         },
       },
       // Boost products whose category matches the search term
       {
-    match: {
-      "category.search": {
-        query: searchTerm,
-        boost: 3
-      }
-    }
-  },
+        match: {
+          'category.search': {
+            query: searchTerm,
+            boost: 3,
+          },
+        },
+      },
     ]
   } else {
     query.body.query.function_score.query.bool.must.push({
@@ -80,7 +82,7 @@ const queryConstructionHelper = (searchParams) => {
     query.body.query.function_score.query.bool.filter.push({
       term: { category: category },
     })
-  } 
+  }
 
   // Add gender filter if provided
   if (gender !== '') {

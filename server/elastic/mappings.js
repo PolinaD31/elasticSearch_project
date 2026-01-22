@@ -19,7 +19,7 @@ const mappings = {
       color: { type: 'keyword' },
       gender: { type: 'keyword' },
       price: { type: 'double' },
-      rating: { type: 'double' },
+      rating: { type: 'float' },
       created_at: { type: 'date' },
     },
   },

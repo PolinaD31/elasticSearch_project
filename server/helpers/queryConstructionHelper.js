@@ -36,7 +36,7 @@ const queryConstructionHelper = (searchParams) => {
   }
 
   // Add searching by text if it is provided
-  if (searchTerm !== '') {
+  if (searchTerm.trim() !== '') {
     query.body.query.function_score.query.bool.must.push({
       multi_match: {
         query: searchTerm,

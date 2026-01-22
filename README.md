@@ -90,11 +90,18 @@ To inject data from PostgreSQL into ElasticSearch run `npm run inject`
 1. Run `npm install`
 2. run `npm run dev`
 
+### Sample data
+Sample data can be found in the `sample_data` folder. Load sample data into your PostgreSQL database and then run the ingestion script. Note that sample data has been generated with the help of an AI assistant.
+
 ### Running the project using Docker
-1. In the root of the project run ` docker build -t elasticSearch-project .`
-2. Run `docker run -p 8080:8080 elasticSearch-project`. This will start the project on port 8080
+1. In the root of the project run ` docker build -t elasticsearch-project .`
+2. Run `docker run -p 8080:8080 elasticsearch-project`. This will start the project on port 8080
 
 # Deployment
 Deployed application can be found by following this link: https://elasticsearch-slush-997355305067.europe-west1.run.app/
+
+### Additional Planning
+You can find additional planning for this project on my [notion](https://www.notion.so/Slush-Assignment-2eb4eddce47180119ef2ed8a71239376?source=copy_link)
+
 
 
